@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Babel configuration file"""
-from flask import Flask, render_template, request, g 
+from flask import Flask, render_template, request, g
 from flask_babel import Babel
 
 app = Flask(__name__)
@@ -12,6 +12,7 @@ users = {
     3: {"name": "Spock", "locale": "kg", "timezone": "Vulcan"},
     4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
 }
+
 
 class Config():
     """
@@ -53,6 +54,7 @@ def get_user():
     if user_id is None:
         return None
     return users.get(int(user_id))
+
 
 @app.before_request
 def before_request():
