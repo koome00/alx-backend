@@ -16,6 +16,9 @@ class Config():
     LANGUAGES = ["en", "fr"]
 
 
+app.config.from_object('1-app.Config')
+
+
 @babel.localeselector
 def get_locale():
     """
