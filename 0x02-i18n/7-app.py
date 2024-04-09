@@ -2,6 +2,8 @@
 """Babel configuration file"""
 from flask import Flask, render_template, request, g
 from flask_babel import Babel
+from pytz import timezone
+import pytz.exceptions
 
 app = Flask(__name__)
 babel = Babel(app)
@@ -49,7 +51,7 @@ def index():
     """
     render index template
     """
-    return render_template("6-index.html")
+    return render_template("7-index.html")
 
 
 def get_user():
@@ -70,6 +72,27 @@ def before_request():
     """
     user = get_user()
     g.user = user
+
+
+@babel.timezoneselector
+def get_timezone():
+    """
+    handle correct timezone
+    """
+    t_zone = request.args.get('timezone', None)
+    if t_zone:
+        try:
+            return timezone(t_zone).zone
+        except pytz.exceptions.UnknownTimeZoneError:
+            return 'UTC'
+    if g.user:
+        try:
+            t_zone = g.user.get('timezone')
+            return timezone(t_zone).zone
+        except pytz.exceptions.UnknownTimeZoneError:
+            return 'UTC'
+    return request.accept_languages.best_match(app.config[
+        'BABEL_DEFAULT_TIMEZONE'])
 
 
 if __name__ == "__main__":
